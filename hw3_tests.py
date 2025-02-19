@@ -2,6 +2,7 @@ import data
 import build_data
 import unittest
 
+import hw3
 
 # These two values are defined to support testing below. The
 # data within these structures should not be modified. Doing
@@ -180,9 +181,21 @@ class TestCases(unittest.TestCase):
 
     # Part 1
     # test population_total
+    def test_population_total_1(self):
+        input1 = full_data
+        expected = 318857056
+        result = hw3.population_total(input1)
+        self.assertEqual(expected, result)
+
+    def test_population_total_2(self):
+        input1 = reduced_data
+        expected = 655813
+        result = hw3.population_total(input1)
+        self.assertEqual(expected, result)
 
     # Part 2
     # test filter_by_state
+
 
     # Part 3
     # test population_by_education
