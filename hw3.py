@@ -27,7 +27,8 @@ def filter_by_state(l1: list[data.CountyDemographics], phr1: str) -> list[data.C
 def population_by_education(l1: list[data.CountyDemographics], phr1: str) -> float:
     pop_education = 0
     for county in l1:
-        pop_education += (county.population.get('2014 Population') * county.education.get(phr1)) / 100
+        if county.education.get(phr1) and county.population.get('2014 Population') is not None:
+            pop_education += (county.population.get('2014 Population') * county.education.get(phr1)) / 100
     return pop_education
 
 # This function, when given a list of county demographics objects and the ethnicity
@@ -36,7 +37,8 @@ def population_by_education(l1: list[data.CountyDemographics], phr1: str) -> flo
 def population_by_ethnicity(l1: list[data.CountyDemographics], phr1: str) -> float:
     pop_ethnicity = 0
     for county in l1:
-        pop_ethnicity += (county.population.get('2014 Population') * county.ethnicities.get(phr1)) / 100
+        if county.ethnicities.get(phr1) and county.population.get('2014 Population') is not None:
+            pop_ethnicity += (county.population.get('2014 Population') * county.ethnicities.get(phr1)) / 100
     return pop_ethnicity
 
 # This function, when given a list of county demographic objects, will return the
@@ -46,8 +48,9 @@ def population_by_ethnicity(l1: list[data.CountyDemographics], phr1: str) -> flo
 def population_below_poverty_level(l1: list[data.CountyDemographics]) -> float:
     pop_poverty = 0
     for county in l1:
-        pop_poverty += (county.population.get('2014 Population') *
-                        county.income.get('Persons Below Poverty Level')) / 100
+        if county.income.get('Persons Below Poverty Level') and county.population.get('2014 Population') is not None:
+            pop_poverty += (county.population.get('2014 Population') *
+                            county.income.get('Persons Below Poverty Level')) / 100
     return pop_poverty
 
 # Part 4
@@ -57,7 +60,7 @@ def population_below_poverty_level(l1: list[data.CountyDemographics]) -> float:
 # provided list for the specified key of interest
 def percent_by_education(l1:list[data.CountyDemographics], phr1: str) -> float:
     if population_total(l1) != 0:
-        return population_by_education(l1, phr1)/population_total(l1)
+        return population_by_education(l1, phr1)/population_total(l1)*100
     return 0
 
 # This function, when given a list of county demographics objects and the
@@ -66,7 +69,7 @@ def percent_by_education(l1:list[data.CountyDemographics], phr1: str) -> float:
 # provided list for the specified key of interest
 def percent_by_ethnicity(l1:list[data.CountyDemographics], phr1: str) -> float:
     if population_total(l1) != 0:
-        return population_by_ethnicity(l1, phr1)/population_total(l1)
+        return population_by_ethnicity(l1, phr1)/population_total(l1)*100
     return 0
 
 # This function, when given a list of county demographics objects, will return
@@ -75,7 +78,7 @@ def percent_by_ethnicity(l1:list[data.CountyDemographics], phr1: str) -> float:
 # provided list for the specified key of interest
 def percent_below_poverty_level(l1: list[data.CountyDemographics]) -> float:
     if population_total(l1) != 0:
-        return population_below_poverty_level(l1)/population_total(l1)
+        return population_below_poverty_level(l1)/population_total(l1)*100
     return 0
 
 # Part 5
@@ -86,15 +89,17 @@ def percent_below_poverty_level(l1: list[data.CountyDemographics]) -> float:
 def education_greater_than(l1: list[data.CountyDemographics], phr1: str, threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.education.get(phr1) > threshold:
-           l2.append(county)
+        if county.education.get(phr1) is not None:
+            if county.education.get(phr1) > threshold:
+               l2.append(county)
     return l2
 
 def education_less_than(l1: list[data.CountyDemographics], phr1: str, threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.education.get(phr1) < threshold:
-           l2.append(county)
+        if county.education.get(phr1) is not None:
+            if county.education.get(phr1) < threshold:
+                l2.append(county)
     return l2
 
 # These two functions, when given a list of county demographic objects, the ethnicity
@@ -104,15 +109,17 @@ def education_less_than(l1: list[data.CountyDemographics], phr1: str, threshold:
 def ethnicity_greater_than(l1: list[data.CountyDemographics], phr1: str, threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.ethnicities.get(phr1) > threshold:
-           l2.append(county)
+        if county.ethnicities.get(phr1) is not None:
+            if county.ethnicities.get(phr1) > threshold:
+               l2.append(county)
     return l2
 
 def ethnicity_less_than(l1: list[data.CountyDemographics], phr1: str, threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.ethnicities.get(phr1) < threshold:
-           l2.append(county)
+        if county.ethnicities.get(phr1) is not None:
+            if county.ethnicities.get(phr1) < threshold:
+               l2.append(county)
     return l2
 
 # These two functions, when given a list of county demographics objects and a numeric
@@ -122,13 +129,15 @@ def ethnicity_less_than(l1: list[data.CountyDemographics], phr1: str, threshold:
 def below_poverty_level_greater_than(l1: list[data.CountyDemographics], threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.ethnicities.get('Persons Below Poverty Level') > threshold:
-            l2.append(county)
+        if county.income.get('Persons Below Poverty Level') is not None:
+            if county.income.get('Persons Below Poverty Level') > threshold:
+                l2.append(county)
     return l2
 
 def below_poverty_level_less_than(l1: list[data.CountyDemographics], threshold: float) -> list[data.CountyDemographics]:
     l2 = []
     for county in l1:
-        if county.ethnicities.get('Persons Below Poverty Level') > threshold:
-            l2.append(county)
+        if county.income.get('Persons Below Poverty Level') is not None:
+            if county.income.get('Persons Below Poverty Level') < threshold:
+                l2.append(county)
     return l2
